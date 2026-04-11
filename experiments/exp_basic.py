@@ -2,7 +2,7 @@ import os
 import torch
 from model import Transformer, Informer, Reformer, Flowformer, Flashformer, \
     iTransformer, iInformer, iReformer, iFlowformer, iFlashformer
-
+from model import RNN, LSTM, GRU
 
 class Exp_Basic(object):
     def __init__(self, args):
