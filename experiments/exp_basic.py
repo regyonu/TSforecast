@@ -18,6 +18,9 @@ class Exp_Basic(object):
             'iReformer': iReformer,
             'iFlowformer': iFlowformer,
             'iFlashformer': iFlashformer,
+            'RNN': RNN,
+			'LSTM': LSTM,
+			'GRU': GRU,
         }
         self.device = self._acquire_device()
         self.model = self._build_model().to(self.device)
