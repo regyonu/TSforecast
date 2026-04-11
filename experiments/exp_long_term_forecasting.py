@@ -19,6 +19,10 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
     def _build_model(self):
         model = self.model_dict[self.args.model].Model(self.args).float()
+        
+        # implemented this line to check the params of the used model 
+        total_params = sum(p.numel() for p in model.parameters())
+		print(f'>>>>>>> Total Parameters for {self.args.model}: {total_params:,}')
 
         if self.args.use_multi_gpu and self.args.use_gpu:
             model = nn.DataParallel(model, device_ids=self.args.device_ids)
