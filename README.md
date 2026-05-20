@@ -20,6 +20,7 @@ The experiments and model implementations leverage the modular structure provide
 
 We express our gratitude to the authors of the following repositories for their foundational code and research:
 - iTransformer (https://github.com/thuml/iTransformer)
+- RevIN (https://github.com/ts-kim/RevIN)
 
 ## Authors
 
