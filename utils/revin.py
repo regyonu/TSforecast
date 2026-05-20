@@ -1,14 +1,14 @@
 import torch
 import torch.nn as nn
 
-		"""
+"""
 		Reversible Instance Normalization (RevIN)
 
 		Original Author: Taesung Kim (ts-kim)
 		Official Repository: https://github.com/ts-kim/RevIN
 		Paper: "Reversible Instance Normalization for Accurate Time-Series 
 				Forecasting against Distribution Shift" (ICLR 2022)
-		"""
+"""
 
 class RevIN(nn.Module):
     def __init__(self, num_features: int, eps=1e-5, affine=True):
