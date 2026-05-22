@@ -248,7 +248,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                     gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
                     pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
                     gt = np.array(gt).reshape(-1)
-					pd = np.array(pd).reshape(-1)
+		    pd = np.array(pd).reshape(-1)
                     visual(gt, pd, os.path.join(folder_path, str(i) + '.png'))
 
         preds = np.array(preds)
