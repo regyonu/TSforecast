@@ -247,8 +247,6 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                         input = test_data.inverse_transform(input.squeeze(0)).reshape(shape)
                     gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
                     pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
-                    gt = np.array(gt).reshape(-1)
-		    pd = np.array(pd).reshape(-1)
                     visual(gt, pd, os.path.join(folder_path, str(i) + '.png'))
 
         preds = np.array(preds)
@@ -273,8 +271,8 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         f.close()
 
         np.save(folder_path + 'metrics.npy', np.array([mae, mse, rmse, mape, mspe]))
-        #np.save(folder_path + 'pred.npy', preds)
-        #np.save(folder_path + 'true.npy', trues)
+        np.save(folder_path + 'pred.npy', preds)
+        np.save(folder_path + 'true.npy', trues)
 
         return
 
