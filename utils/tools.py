@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 plt.switch_backend('agg')
+plt.style.use('seaborn-v0_8-whitegrid')
 
 
 def adjust_learning_rate(optimizer, epoch, args):
@@ -75,17 +76,28 @@ class StandardScaler():
         return (data * self.std) + self.mean
 
 
-def visual(true, preds=None, name='./pic/test.pdf'):
+def visual(true, preds=None, name='./pic/test.png'):
     """
-    Results visualization
+    High-quality visualization saved as PNG
     """
-    plt.figure()
-    plt.plot(true, label='GroundTruth', linewidth=2)
-    if preds is not None:
-        plt.plot(preds, label='Prediction', linewidth=2)
-    plt.legend()
-    plt.savefig(name, bbox_inches='tight')
+    plt.figure(figsize=(12, 4), dpi=200)
 
+    true = np.array(true).reshape(-1)
+    plt.plot(true, label='GroundTruth', linewidth=2)
+
+    if preds is not None:
+        preds = np.array(preds).reshape(-1)
+        plt.plot(preds, label='Prediction', linewidth=2)
+
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+
+    # ensure folder exists
+    os.makedirs(os.path.dirname(name), exist_ok=True)
+
+    plt.savefig(name, bbox_inches='tight', dpi=200)
+    plt.close()
 
 def adjustment(gt, pred):
     anomaly_state = False

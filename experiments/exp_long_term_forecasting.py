@@ -247,7 +247,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                         input = test_data.inverse_transform(input.squeeze(0)).reshape(shape)
                     gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
                     pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
-                    visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
+                    visual(gt, pd, os.path.join(folder_path, str(i) + '.png'))
 
         preds = np.array(preds)
         trues = np.array(trues)
