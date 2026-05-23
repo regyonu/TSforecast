@@ -22,7 +22,7 @@ C_OUT=7
 # =========================
 # MODEL (shared)
 # =========================
-D_MODEL=128
+D_MODEL=256
 N_HEADS=8
 E_LAYERS=2
 D_LAYERS=1
