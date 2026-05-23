@@ -52,6 +52,7 @@ class Model(nn.Module):
             input_size=self.d_model,
             hidden_size=self.d_model,
             num_layers=configs.e_layers,
+            nonlinearity='tanh',
             batch_first=True,
             dropout=configs.dropout if configs.e_layers > 1 else 0
         )
