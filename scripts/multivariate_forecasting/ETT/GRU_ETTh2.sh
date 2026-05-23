@@ -2,6 +2,9 @@ export CUDA_VISIBLE_DEVICES=0
 
 model_name=GRU
 
+# =========================
+# ETTh2 - 96 → 96
+# =========================
 python -u run.py \
   --is_training 1 \
   --root_path ./dataset/ETT-small/ \
@@ -17,10 +20,13 @@ python -u run.py \
   --dec_in 7 \
   --c_out 7 \
   --des 'Exp' \
-  --d_model 128 \
-  --d_ff 128 \
+  --d_model 256 \
+  --d_ff 256 \
   --itr 1
 
+# =========================
+# ETTh2 - 96 → 192
+# =========================
 python -u run.py \
   --is_training 1 \
   --root_path ./dataset/ETT-small/ \
@@ -36,10 +42,13 @@ python -u run.py \
   --dec_in 7 \
   --c_out 7 \
   --des 'Exp' \
-  --d_model 128 \
-  --d_ff 128 \
+  --d_model 256 \
+  --d_ff 256 \
   --itr 1
 
+# =========================
+# ETTh2 - 96 → 336
+# =========================
 python -u run.py \
   --is_training 1 \
   --root_path ./dataset/ETT-small/ \
@@ -55,10 +64,13 @@ python -u run.py \
   --dec_in 7 \
   --c_out 7 \
   --des 'Exp' \
-  --d_model 128 \
-  --d_ff 128 \
+  --d_model 256 \
+  --d_ff 256 \
   --itr 1
 
+# =========================
+# ETTh2 - 96 → 720
+# =========================
 python -u run.py \
   --is_training 1 \
   --root_path ./dataset/ETT-small/ \
@@ -74,6 +86,6 @@ python -u run.py \
   --dec_in 7 \
   --c_out 7 \
   --des 'Exp' \
-  --d_model 128 \
-  --d_ff 128 \
+  --d_model 256 \
+  --d_ff 256 \
   --itr 1
