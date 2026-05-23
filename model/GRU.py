@@ -1,27 +1,53 @@
 import torch
 import torch.nn as nn
+
 from utils.revin import RevIN
 
 
 class Model(nn.Module):
+    """
+    Pure GRU baseline with:
+    - RevIN normalization
+    - Linear input projection
+    - Sequence-output forecasting 
+
+    Architecture:
+    RevIN -> Linear Projection -> GRU -> Sequence Forecast Head
+    """
+
     def __init__(self, configs):
         super(Model, self).__init__()
 
+        # =========================================================
+        # Basic configs
+        # =========================================================
         self.pred_len = configs.pred_len
         self.c_out = configs.c_out
         self.d_model = configs.d_model
+
         self.use_revin = getattr(configs, 'use_revin', True)
 
-        # RevIN normalization
-        # Used across all models for fair comparison
+        # =========================================================
+        # RevIN
+        # =========================================================
         if self.use_revin:
-            self.revin = RevIN(configs.enc_in, affine=True)
+            self.revin = RevIN(
+                num_features=configs.enc_in,
+                affine=True
+            )
 
-        # Simple linear projection
-        # No temporal or positional encoding
-        self.input_proj = nn.Linear(configs.enc_in, self.d_model)
+        # =========================================================
+        # Input projection
+        # [B, T, enc_in] -> [B, T, d_model]
+        # =========================================================
+        self.input_proj = nn.Linear(
+            configs.enc_in,
+            self.d_model
+        )
 
-        # Pure GRU backbone
+        # =========================================================
+        # GRU backbone
+        # =========================================================
         self.gru = nn.GRU(
             input_size=self.d_model,
             hidden_size=self.d_model,
@@ -30,10 +56,15 @@ class Model(nn.Module):
             dropout=configs.dropout if configs.e_layers > 1 else 0
         )
 
+        # =========================================================
         # Forecast head
+        # Applied timestep-wise
+        # [B, pred_len, d_model]
+        # -> [B, pred_len, c_out]
+        # =========================================================
         self.projection = nn.Linear(
             self.d_model,
-            self.pred_len * self.c_out
+            self.c_out
         )
 
     def forward(
@@ -45,31 +76,47 @@ class Model(nn.Module):
         mask=None
     ):
 
-        # Normalize
+        # =========================================================
+        # 1. RevIN normalization
+        # =========================================================
         if self.use_revin:
             x_enc = self.revin(x_enc, 'norm')
 
-        # Input projection
-        # x_mark_enc is intentionally ignored
-        x = self.input_proj(x_enc)  # [B, T, d_model]
+        # =========================================================
+        # 2. Input projection
+        # =========================================================
+        x = self.input_proj(x_enc)
 
-        # GRU forward
-        out, _ = self.gru(x)       # [B, T, d_model]
+        # x shape:
+        # [B, seq_len, d_model]
 
-        
-        out = out[:, -1, :]      # [B, d_model]
+        # =========================================================
+        # 3. GRU forward
+        # =========================================================
+        out, _ = self.gru(x)
 
-        # Forecast projection
+        # out shape:
+        # [B, seq_len, d_model]
+
+        # =========================================================
+        # 4. Take last pred_len hidden states
+        # =========================================================
+        out = out[:, -self.pred_len:, :]
+
+        # shape:
+        # [B, pred_len, d_model]
+
+        # =========================================================
+        # 5. Forecast projection
+        # =========================================================
         out = self.projection(out)
 
-        # Reshape to forecasting format
-        out = out.view(
-            out.size(0),
-            self.pred_len,
-            self.c_out
-        )                           # [B, pred_len, c_out]
+        # shape:
+        # [B, pred_len, c_out]
 
-        # Denormalize
+        # =========================================================
+        # 6. RevIN denormalization
+        # =========================================================
         if self.use_revin:
             out = self.revin(out, 'denorm')
 
