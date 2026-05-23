@@ -56,8 +56,8 @@ class Model(nn.Module):
         # RNN forward
         out, _ = self.rnn(x)       # [B, T, d_model]
 
-        # Temporal mean pooling
-        out = out.mean(dim=1)       # [B, d_model]
+        
+        out = out[:, -1, :]     # [B, d_model]
 
         # Forecast projection
         out = self.projection(out)
