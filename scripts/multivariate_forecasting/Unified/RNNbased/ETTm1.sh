@@ -52,7 +52,7 @@ models=("LSTM" "GRU" "RNN")
 for model_name in "${models[@]}"; do
   for pred_len in "${PRED_LENS[@]}"; do
 
-    model_id="${DATA}_${SEQ_LEN}_${pred_len}_${model_name}"
+    model_id="${model_name}_${SEQ_LEN}_${pred_len}"
 
     echo "====================================="
     echo "Model: $model_name | Horizon: $pred_len"
