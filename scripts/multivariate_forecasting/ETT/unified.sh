@@ -31,28 +31,20 @@ models=("LSTM" "GRU" "RNN")
 pred_lens=(96 192 336 720)
 
 # =========================
-# SEEDS (IMPORTANT)
-# =========================
-seeds=(2024 2025 2026)
-
-# =========================
 # MAIN LOOP
 # =========================
 for model_name in "${models[@]}"; do
   for pred_len in "${pred_lens[@]}"; do
-    for seed in "${seeds[@]}"; do
 
-      model_id="${DATA}_${SEQ_LEN}_${pred_len}_${model_name}_seed${seed}"
+      model_id="${DATA}_${SEQ_LEN}_${pred_len}_${model_name}"
 
       echo "====================================="
       echo "Model: $model_name"
       echo "Horizon: $pred_len"
-      echo "Seed: $seed"
       echo "====================================="
 
       python -u run.py \
         --is_training 1 \
-        --seed $seed \
         --root_path $ROOT_PATH \
         --data_path $DATA_PATH \
         --model_id $model_id \
@@ -70,6 +62,5 @@ for model_name in "${models[@]}"; do
         --d_ff $D_FF \
         --itr 1
 
-    done
   done
 done
