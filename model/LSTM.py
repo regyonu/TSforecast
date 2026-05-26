@@ -6,7 +6,7 @@ from utils.revin import RevIN
 class Model(nn.Module):
     """
     Baseline Recurrent Model:
-    - RevIN normalization (optional, for fair comparison)
+    - RevIN normalization (optional)
     - Linear input projection
     - LSTM backbone
     - Last step (final hidden state) aggregation
@@ -19,7 +19,7 @@ class Model(nn.Module):
         self.pred_len = configs.pred_len
         self.c_out = configs.c_out
         self.d_model = configs.d_model
-        self.use_revin = getattr(configs, "use_revin", True)
+        self.use_revin = getattr(configs, "use_revin", False)
 
         # RevIN (applied consistently across models for fairness)
         if self.use_revin:
