@@ -22,24 +22,25 @@ C_OUT=321
 # =========================
 # MODEL (shared)
 # =========================
-D_MODEL=512
+D_MODEL=128
 N_HEADS=8
-E_LAYERS=3
+E_LAYERS=2
 D_LAYERS=1
-D_FF=512
+D_FF=256
 FACTOR=1
 EMBED="timeF"
 
 # =========================
 # TRAINING
 # =========================
-TRAIN_EPOCHS=10
+TRAIN_EPOCHS=20
 BATCH_SIZE=16
-PATIENCE=3
-LR=0.0005
+PATIENCE=5
+LR=0.0001
 LOSS="MSE"
 LRADJ="type1"
-NUM_WORKERS=0
+NUM_WORKERS=2
+ITR=1
 
 # =========================
 # MODELS
@@ -85,7 +86,8 @@ for model_name in "${models[@]}"; do
       --loss $LOSS \
       --lradj $LRADJ \
       --num_workers $NUM_WORKERS \
-      --des "Benchmark"
+      --des "Benchmark" \
+      --itr $ITR
 
   done
 done

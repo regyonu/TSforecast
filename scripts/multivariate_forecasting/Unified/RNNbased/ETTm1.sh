@@ -33,13 +33,14 @@ EMBED="timeF"
 # =========================
 # TRAINING
 # =========================
-TRAIN_EPOCHS=10
+TRAIN_EPOCHS=20
 BATCH_SIZE=32
-PATIENCE=3
+PATIENCE=5
 LR=0.0001
 LOSS="MSE"
 LRADJ="type1"
 NUM_WORKERS=2
+ITR=1
 
 # =========================
 # MODELS
@@ -85,7 +86,8 @@ for model_name in "${models[@]}"; do
       --loss $LOSS \
       --lradj $LRADJ \
       --num_workers $NUM_WORKERS \
-      --des "Benchmark"
+      --des "Benchmark" \
+      --itr $ITR
 
   done
 done
