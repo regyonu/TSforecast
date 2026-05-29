@@ -69,6 +69,7 @@ for model_name in "${models[@]}"; do
       --data_path $DATA_PATH \
       --features M \
       --seq_len $SEQ_LEN \
+      --label_len 48 \
       --pred_len $pred_len \
       --enc_in $ENC_IN \
       --dec_in $DEC_IN \

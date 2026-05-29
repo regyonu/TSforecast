@@ -6,18 +6,18 @@ export CUDA_VISIBLE_DEVICES=0
 # DATA
 # =========================
 DATA=custom
-ROOT_PATH=./dataset/weather/
-DATA_PATH=weather.csv
+ROOT_PATH=./dataset/illness/
+DATA_PATH=national_illness.csv
 
 # =========================
 # FORECAST SETTINGS
 # =========================
-SEQ_LEN=96
-PRED_LENS=(96 192 336 720)
+SEQ_LEN=36
+PRED_LENS=(24 36 48 60)
 
-ENC_IN=21
-DEC_IN=21
-C_OUT=21
+ENC_IN=7
+DEC_IN=7
+C_OUT=7
 
 # =========================
 # MODEL (shared)
@@ -46,7 +46,7 @@ ITR=1
 # =========================
 # MODELS
 # =========================
-models=("Transformer" "iTransformer")
+models=("LSTM" "GRU" "RNN")
 
 # =========================
 # RUN
@@ -54,7 +54,7 @@ models=("Transformer" "iTransformer")
 for model_name in "${models[@]}"; do
   for pred_len in "${PRED_LENS[@]}"; do
 
-    model_id="weather_${SEQ_LEN}_${pred_len}"
+    model_id="${DATA}_${SEQ_LEN}_${pred_len}"
 
     echo "====================================="
     echo "Model: $model_name | Horizon: $pred_len"
@@ -69,7 +69,7 @@ for model_name in "${models[@]}"; do
       --data_path $DATA_PATH \
       --features M \
       --seq_len $SEQ_LEN \
-      --label_len 48 \
+      --label_len 18 \
       --pred_len $pred_len \
       --enc_in $ENC_IN \
       --dec_in $DEC_IN \
