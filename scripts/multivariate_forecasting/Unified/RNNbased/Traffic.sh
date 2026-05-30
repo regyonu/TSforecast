@@ -22,12 +22,13 @@ C_OUT=862
 # =========================
 # MODEL (shared)
 # =========================
-D_MODEL=128
+D_MODEL=256
 N_HEADS=8
 E_LAYERS=2
 D_LAYERS=1
-D_FF=256
-FACTOR=1
+D_FF=512
+FACTOR=3
+DROPOUT=0.1
 EMBED="timeF"
 
 # =========================
@@ -79,6 +80,7 @@ for model_name in "${models[@]}"; do
       --d_ff $D_FF \
       --factor $FACTOR \
       --embed $EMBED \
+      --dropout $DROPOUT \
       --batch_size $BATCH_SIZE \
       --train_epochs $TRAIN_EPOCHS \
       --patience $PATIENCE \
