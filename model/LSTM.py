@@ -15,9 +15,7 @@ class Model(nn.Module):
 
         self.pred_len = configs.pred_len
         self.c_out = configs.c_out
-
-        # Hidden size = same as configs (or enc_in if you want strict baseline)
-        self.hidden_dim = configs.hidden_dim if hasattr(configs, "hidden_dim") else configs.enc_in
+        self.hidden_dim = configs.d_model
 
         # PURE LSTM (no embedding layer)
         self.lstm = nn.LSTM(
