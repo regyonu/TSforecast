@@ -40,7 +40,7 @@ PATIENCE=5
 LR=0.0001
 LOSS="MSE"
 LRADJ="type1"
-NUM_WORKERS=2
+NUM_WORKERS=10
 ITR=1
 
 # =========================
