@@ -6,18 +6,18 @@ export CUDA_VISIBLE_DEVICES=0
 # DATA
 # =========================
 DATA=custom
-ROOT_PATH=./dataset/traffic/
-DATA_PATH=traffic.csv
+ROOT_PATH=./dataset/electricity/
+DATA_PATH=electricity.csv
 
 # =========================
 # FORECAST SETTINGS
 # =========================
 SEQ_LEN=96
-PRED_LENS=(96 192)
+PRED_LENS=(336 720)
 
-ENC_IN=862
-DEC_IN=862
-C_OUT=862
+ENC_IN=321
+DEC_IN=321
+C_OUT=321
 
 # =========================
 # MODEL (shared)
@@ -54,7 +54,7 @@ models=("LSTM" "GRU" "RNN")
 for model_name in "${models[@]}"; do
   for pred_len in "${PRED_LENS[@]}"; do
 
-    model_id="traffic_${SEQ_LEN}_${pred_len}"
+    model_id="electricity_${SEQ_LEN}_${pred_len}"
 
     echo "====================================="
     echo "Model: $model_name | Horizon: $pred_len"

@@ -13,7 +13,7 @@ DATA_PATH=traffic.csv
 # FORECAST SETTINGS
 # =========================
 SEQ_LEN=96
-PRED_LENS=(96 192)
+PRED_LENS=(336 720)
 
 ENC_IN=862
 DEC_IN=862
