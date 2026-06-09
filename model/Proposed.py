@@ -9,7 +9,7 @@ from layers.Autoformer_EncDec import series_decomp
 
 class Model(nn.Module):
     """
-    Transformer + DLinear decomposition:
+    Transformer + decomposition:
       trend     → Linear(seq_len → pred_len)
       seasonal  → Transformer encoder-decoder
       output    = trend_pred + seasonal_pred
