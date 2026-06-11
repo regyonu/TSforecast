@@ -5,9 +5,9 @@ export CUDA_VISIBLE_DEVICES=0
 # =========================
 # DATA
 # =========================
-DATA=ETTh2
-ROOT_PATH=./dataset/ETT-small/
-DATA_PATH=ETTh2.csv
+DATA=custom
+ROOT_PATH=./dataset/weather/
+DATA_PATH=weather.csv
 
 # =========================
 # FORECAST SETTINGS
@@ -15,9 +15,9 @@ DATA_PATH=ETTh2.csv
 SEQ_LEN=96
 PRED_LENS=(96 192 336 720)
 
-ENC_IN=7
-DEC_IN=7
-C_OUT=7
+ENC_IN=21
+DEC_IN=21
+C_OUT=21
 
 # =========================
 # MODEL (shared)
@@ -54,7 +54,7 @@ models=("Proposed" "DLinear")
 for model_name in "${models[@]}"; do
   for pred_len in "${PRED_LENS[@]}"; do
 
-    model_id="${DATA}_${SEQ_LEN}_${pred_len}"
+    model_id="weather_${SEQ_LEN}_${pred_len}"
 
     echo "====================================="
     echo "Model: $model_name | Horizon: $pred_len"
@@ -89,7 +89,7 @@ for model_name in "${models[@]}"; do
       --loss $LOSS \
       --lradj $LRADJ \
       --num_workers $NUM_WORKERS \
-      --use_norm 1 \
+      --use_norm 0 \
       --des "Benchmark" \
       --itr $ITR
 

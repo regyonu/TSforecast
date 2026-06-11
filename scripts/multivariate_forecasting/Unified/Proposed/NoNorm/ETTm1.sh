@@ -5,9 +5,9 @@ export CUDA_VISIBLE_DEVICES=0
 # =========================
 # DATA
 # =========================
-DATA=ETTh2
+DATA=ETTm1
 ROOT_PATH=./dataset/ETT-small/
-DATA_PATH=ETTh2.csv
+DATA_PATH=ETTm1.csv
 
 # =========================
 # FORECAST SETTINGS
@@ -89,7 +89,7 @@ for model_name in "${models[@]}"; do
       --loss $LOSS \
       --lradj $LRADJ \
       --num_workers $NUM_WORKERS \
-      --use_norm 1 \
+      --use_norm 0 \
       --des "Benchmark" \
       --itr $ITR
 

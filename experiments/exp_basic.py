@@ -3,7 +3,7 @@ import torch
 from model import Transformer, Informer, Reformer, Flowformer, Flashformer, \
     iTransformer, iInformer, iReformer, iFlowformer, iFlashformer
 from model import RNN, LSTM, GRU
-from model import Proposed , DLinear
+from model import Proposed , DLinear, NTransformer
 
 class Exp_Basic(object):
     def __init__(self, args):
@@ -24,6 +24,7 @@ class Exp_Basic(object):
 			'GRU': GRU,
 			'Proposed': Proposed,
 			'DLinear': DLinear,
+			'NTransformer': NTransformer,
         }
         self.device = self._acquire_device()
         self.model = self._build_model().to(self.device)
