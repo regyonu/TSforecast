@@ -21,9 +21,7 @@ class Model(nn.Module):
         self.output_attention = configs.output_attention
         self.use_norm = configs.use_norm
 
-        # ── Decomposition ────────────────────────────────────────────────
         self.decomposition = series_decomp(configs.moving_avg)
-        
 
         if configs.channel_independence:
             self.enc_in = 1
@@ -34,11 +32,8 @@ class Model(nn.Module):
             self.dec_in = configs.dec_in
             self.c_out  = configs.c_out
 
-        # ── Trend branch  ──────────────────────────────────
-        # operates on (B, C, seq_len) → (B, C, pred_len)
         self.trend_projection = nn.Linear(configs.seq_len, configs.pred_len, bias=True)
 
-        # ── Seasonal branch  ────────────────────────────────
         self.enc_embedding = DataEmbedding(
             self.enc_in, configs.d_model, configs.embed, configs.freq, configs.dropout
         )
@@ -90,19 +85,20 @@ class Model(nn.Module):
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
         if self.use_norm:
-            # Normalization from Non-stationary Transformer
             means = x_enc.mean(1, keepdim=True).detach()
             x_enc = x_enc - means
             stdev = torch.sqrt(torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
             x_enc /= stdev
-            x_dec = (x_dec - means) / stdev
-            
-        # ── 1. Decompose both encoder and decoder inputs ──────────────────
-        seasonal_enc, trend_enc = self.decomposition(x_enc)   # (B, seq_len, C)
-        seasonal_dec, trend_dec = self.decomposition(x_dec)   # (B, label_len+pred_len, C)
+
+            label_len = x_dec.shape[1] - self.pred_len
+            x_dec = x_dec.clone()
+            x_dec[:, :label_len, :] = (x_dec[:, :label_len, :] - means) / stdev
+
+        # ── 1. Decompose ──────────────────────────────────────────────────
+        seasonal_enc, trend_enc = self.decomposition(x_enc)
+        seasonal_dec, trend_dec = self.decomposition(x_dec)
 
         # ── 2. Trend branch ───────────────────────────────────────────────
-        # (B, seq_len, C) → (B, C, seq_len) → (B, C, pred_len) → (B, pred_len, C)
         trend_out = self.trend_projection(
             trend_enc.permute(0, 2, 1)
         ).permute(0, 2, 1)                                     # (B, pred_len, C)
@@ -115,13 +111,13 @@ class Model(nn.Module):
         seasonal_out = self.decoder(dec_out, enc_out, x_mask=None, cross_mask=None)
         seasonal_out = seasonal_out[:, -self.pred_len:, :]     # (B, pred_len, C)
 
-        # ── 4. Add branches ───────────────────────────────────────────────
-        out = seasonal_out + trend_out                        # (B, pred_len, C)
+        # ── 4. Combine ────────────────────────────────────────────────────
+        out = seasonal_out + trend_out                         # (B, pred_len, C)
 
         if self.use_norm:
-            # De-Normalization from Non-stationary Transformer
-            out = out * (stdev[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
-            out = out + (means[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
-        return out           
+            out = out * stdev + means
+
+        return out
+
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
         return self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)

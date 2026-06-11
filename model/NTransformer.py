@@ -74,12 +74,14 @@ class Model(nn.Module):
 
     def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
         if self.use_norm:
-            # Normalization from Non-stationary Transformer
             means = x_enc.mean(1, keepdim=True).detach()
             x_enc = x_enc - means
             stdev = torch.sqrt(torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
             x_enc /= stdev
-            x_dec = (x_dec - means) / stdev
+
+            label_len = x_dec.shape[1] - self.pred_len
+            x_dec = x_dec.clone()
+            x_dec[:, :label_len, :] = (x_dec[:, :label_len, :] - means) / stdev
 
         # Embedding
         enc_out = self.enc_embedding(x_enc, x_mark_enc)
@@ -87,12 +89,11 @@ class Model(nn.Module):
 
         dec_out = self.dec_embedding(x_dec, x_mark_dec)
         dec_out = self.decoder(dec_out, enc_out, x_mask=None, cross_mask=None)
-        
+
         if self.use_norm:
-            # De-Normalization from Non-stationary Transformer
-            out = out * (stdev[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
-            out = out + (means[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
-        return out
+            dec_out = dec_out * stdev + means
+
+        return dec_out
 
     def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
         dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
