@@ -89,7 +89,6 @@ for model_name in "${models[@]}"; do
       --loss $LOSS \
       --lradj $LRADJ \
       --num_workers $NUM_WORKERS \
-      --use_norm 1 \
       --des "Benchmark" \
       --itr $ITR
 
