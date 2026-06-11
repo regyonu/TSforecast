@@ -13,7 +13,7 @@ DATA_PATH=electricity.csv
 # FORECAST SETTINGS
 # =========================
 SEQ_LEN=96
-PRED_LENS=(96 192 336 720)
+PRED_LENS=(96 192)
 
 ENC_IN=321
 DEC_IN=321
@@ -46,7 +46,7 @@ ITR=1
 # =========================
 # MODELS
 # =========================
-models=("Proposed" "DLinear")
+models=("Proposed" "DLinear" "NTransformer")
 
 # =========================
 # RUN

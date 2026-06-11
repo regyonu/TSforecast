@@ -6,18 +6,18 @@ export CUDA_VISIBLE_DEVICES=0
 # DATA
 # =========================
 DATA=custom
-ROOT_PATH=./dataset/weather/
-DATA_PATH=weather.csv
+ROOT_PATH=./dataset/electricity/
+DATA_PATH=electricity.csv
 
 # =========================
 # FORECAST SETTINGS
 # =========================
 SEQ_LEN=96
-PRED_LENS=(96 192 336 720)
+PRED_LENS=(336 720)
 
-ENC_IN=21
-DEC_IN=21
-C_OUT=21
+ENC_IN=321
+DEC_IN=321
+C_OUT=321
 
 # =========================
 # MODEL (shared)
@@ -35,7 +35,7 @@ EMBED="timeF"
 # TRAINING
 # =========================
 TRAIN_EPOCHS=20
-BATCH_SIZE=32
+BATCH_SIZE=16
 PATIENCE=5
 LR=0.0001
 LOSS="MSE"
@@ -54,7 +54,7 @@ models=("Proposed" "DLinear" "NTransformer")
 for model_name in "${models[@]}"; do
   for pred_len in "${PRED_LENS[@]}"; do
 
-    model_id="weather_${SEQ_LEN}_${pred_len}"
+    model_id="electricity_${SEQ_LEN}_${pred_len}"
 
     echo "====================================="
     echo "Model: $model_name | Horizon: $pred_len"

@@ -46,7 +46,7 @@ ITR=1
 # =========================
 # MODELS
 # =========================
-models=("Proposed" "DLinear")
+models=("Proposed" "DLinear" "NTransformer")
 
 # =========================
 # RUN
